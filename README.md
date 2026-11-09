@@ -8,9 +8,9 @@
 
 - 自定义总倒计时，支持 90 / 120 分钟预设。
 - 政治理论、常识判断、言语理解、数量关系、判断推理、资料分析六模块独立统计。
-- 点击模块切换，切回后继续累计，显示当前模块剩余时间。
+- 点击模块切换，切回后继续累计；模块时间仅作建议，超出后显示超时并继续记录。
 - 暂停、继续、到时提示与超时记录。
-- 本地保存历史，按次查看用时扇形图，查看六模块平均用时扇形图。
+- 本地保存历史，列表直接删除并确认；按次查看用时扇形图，查看六模块平均用时扇形图。
 - 计时运行且应用在前台时保持屏幕常亮。
 - 无需账号、无广告、无联网权限。
 
@@ -19,6 +19,8 @@
 <table><tr><td><img src="docs/screenshots/phone.png" alt="手机计时界面" width="280"></td><td><img src="docs/screenshots/statistics.png" alt="平均用时统计示例" width="280"></td></tr></table>
 
 [平板界面](docs/screenshots/tablet.png)。截图为浏览器界面预览，统计图使用示例数据，安装包没有预置做题记录。
+
+[记录删除界面](docs/screenshots/history.png)
 
 ## 安装
 
@@ -50,6 +52,14 @@ New-Item -ItemType Directory -Force test-classes
 javac -encoding UTF-8 -d test-classes app/src/main/java/cn/xingce/timer/TimerEngine.java tests/TimerEngineTest.java
 java -cp test-classes TimerEngineTest
 ```
+
+安卓原生安全区域回归测试：
+
+```powershell
+.\gradlew.bat :app:testDebugUnitTest
+```
+
+使用 Robolectric 在 Android 15 环境验证 WebView 的实际布局边界，覆盖状态栏、大挖孔、横屏侧边挖孔和软键盘。测试依赖仅用于构建，不打入 APK。
 
 ## 计时规则与验证
 

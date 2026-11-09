@@ -6,6 +6,12 @@ public class TimerEngineTest {
     public static void main(String[] args){
         TimerEngine e=new TimerEngine(()->now);
         check(e.totalBudget()==7200000,"default 120 minutes");
+        e.start(100000);now+=660000;
+        check(e.running&&e.times()[0]==660000&&e.elapsed()<e.totalBudget(),"module suggestion exceeded without stopping");
+        e.select(1);now+=2000;e.select(0);now+=3000;
+        check(e.times()[0]==663000&&e.times()[1]==2000,"overtime survives module switches");
+        e.pause();now+=5000;check(e.times()[0]==663000,"overtime pause excludes idle time");
+        e.reset();now=0;
         e.start(100000);now+=1200;e.select(1);now+=2300;
         check(Arrays.equals(e.times(),new long[]{1200,2300,0,0,0,0}),"switch allocates each segment exactly");
         e.pause();now+=500000;check(e.elapsed()==3500,"pause excludes elapsed time");

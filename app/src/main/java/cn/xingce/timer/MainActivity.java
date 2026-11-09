@@ -8,6 +8,7 @@ import android.media.*;
 import android.provider.Settings;
 import android.view.*;
 import android.webkit.*;
+import android.widget.FrameLayout;
 import org.json.*;
 import java.util.UUID;
 
@@ -38,6 +39,7 @@ public class MainActivity extends Activity {
     }};
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
+        if(Build.VERSION.SDK_INT>=30) getWindow().setDecorFitsSystemWindows(false);
         bridge=new Bridge();
         try { tone=new ToneGenerator(AudioManager.STREAM_NOTIFICATION,85); } catch(RuntimeException ignored){}
         web=new WebView(this);
@@ -51,15 +53,23 @@ public class MainActivity extends Activity {
             @Override public boolean shouldOverrideUrlLoading(WebView view,WebResourceRequest request){return true;}
         });
         web.addJavascriptInterface(bridge,"Native");
-        setContentView(web);
-        // Target 35 uses edge-to-edge. Explicit insets preserve status/navigation areas.
-        web.setOnApplyWindowInsetsListener((v,insets)->{
+        // WebView does not reliably inset HTML when padding is applied directly to it.
+        // A native parent must measure the entire browser inside the safe rectangle.
+        FrameLayout safeArea=new FrameLayout(this);
+        safeArea.setBackgroundColor(Color.rgb(245,247,251));
+        safeArea.addView(web,new FrameLayout.LayoutParams(-1,-1));
+        safeArea.setOnApplyWindowInsetsListener((v,insets)->{
             if(Build.VERSION.SDK_INT>=30) {
-                android.graphics.Insets bars=insets.getInsets(WindowInsets.Type.systemBars()|WindowInsets.Type.displayCutout());
-                v.setPadding(bars.left,bars.top,bars.right,bars.bottom);
-            } else v.setPadding(insets.getSystemWindowInsetLeft(),insets.getSystemWindowInsetTop(),insets.getSystemWindowInsetRight(),insets.getSystemWindowInsetBottom());
-            return insets;
+                android.graphics.Insets bars=insets.getInsetsIgnoringVisibility(WindowInsets.Type.systemBars()|WindowInsets.Type.displayCutout());
+                android.graphics.Insets keyboard=insets.getInsets(WindowInsets.Type.ime());
+                v.setPadding(bars.left,bars.top,bars.right,Math.max(bars.bottom,keyboard.bottom));
+                return WindowInsets.CONSUMED;
+            }
+            v.setPadding(insets.getSystemWindowInsetLeft(),insets.getSystemWindowInsetTop(),insets.getSystemWindowInsetRight(),insets.getSystemWindowInsetBottom());
+            return insets.consumeSystemWindowInsets();
         });
+        setContentView(safeArea);
+        safeArea.requestApplyInsets();
         web.loadUrl("file:///android_asset/index.html");
         updateScreen(); handler.post(tick);
     }
