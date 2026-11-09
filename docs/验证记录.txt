@@ -1,5 +1,5 @@
-行测计时 v1.0.2 验证记录
-- 安卓 Release 构建通过，versionCode 3 / versionName 1.0.2，应用 ID cn.xingce.timer。
+行测计时 v1.0.3 验证记录
+- 安卓 Release 构建通过，versionCode 4 / versionName 1.0.3，应用 ID cn.xingce.timer。
 - APK 签名与旧版一致，Android v2 签名与 ZIP 对齐验证通过。
 - Android Lint：0 errors，1 warning（本地 WebView 启用 JavaScript，加载的均为内置资源）。
 - Robolectric Android 15 原生测试通过：顶部状态栏及大挖孔、横屏侧边挖孔、底部导航栏及软键盘。
@@ -9,3 +9,5 @@
 - 回归检查通过：超时后显示已超时、累计并保存实际用时；记录列表直接删除、取消删除、重载持久性、删除后重新计算平均统计。
 - 截图均为浏览器预览，示例记录不包含在安装包中。
 - 当前未连接安卓真机或安卓模拟器；厂商状态栏、常亮、后台策略仍需要设备运行验证。
+
+- v1.0.3 重置回归通过：运行/暂停时确认与取消、清空本次全部模块、保留时间设置与历史、重载后不恢复旧计时、释放常亮标志、320–1280 像素下按钮不与提示重叠。

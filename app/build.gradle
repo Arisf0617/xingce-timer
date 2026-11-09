@@ -5,7 +5,7 @@ if (signingPropsFile.exists()) signingPropsFile.withInputStream { signingProps.l
 android {
     namespace 'cn.xingce.timer'
     compileSdk 35
-    defaultConfig { applicationId 'cn.xingce.timer'; minSdk 26; targetSdk 35; versionCode 3; versionName '1.0.2' }
+    defaultConfig { applicationId 'cn.xingce.timer'; minSdk 26; targetSdk 35; versionCode 4; versionName '1.0.3' }
     signingConfigs {
         if (signingPropsFile.exists()) {
             localRelease { storeFile rootProject.file(signingProps['storeFile']); storePassword signingProps['storePassword']; keyAlias signingProps['keyAlias']; keyPassword signingProps['keyPassword'] }
